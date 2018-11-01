@@ -1,0 +1,30 @@
+{
+  "method": "POST",
+  "url": "https://ussouthcentral.services.azureml.net/workspaces/8adcd3fcb50148868d9887590d28df98/services/d79069538c224f3589d61c0287c03205/execute",
+  "qs": {
+    "api-version": "2.0",
+    "details": "true"
+  },
+  "headers": {
+    "postman-token": "17b48470-705e-6fbd-2bab-8869279b9d7f",
+    "cache-control": "no-cache",
+    "content-type": "application/json"
+  },
+  "body": {
+    "Inputs": {
+      "input1": {
+        "ColumnNames": [
+          "MaritalStatusNumeric",
+          "GenderNumeric",
+          "Income",
+          "CommuteDistanceNumeric",
+          "Cars",
+          "Age",
+          "PurchaseBikeNumeric"
+        ]
+      }
+    },
+    "GlobalParameters": {}
+  },
+  "json": true
+}

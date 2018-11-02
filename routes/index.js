@@ -11,13 +11,16 @@ router.get('/', function(req, res, next) {
 router.get('/predict', function(req, res, next) {
     var apiKey = process.env.BIKE_API_KEY
     var options = require('./prediction-options.json');
-    var maritalStatusNumeric = 0;
-    var genderNumeric = 0;
-    var income = 70000;
-    var commuteDistanceNumeric = 1;
-    var cars = 2;
-    var age = 30;
+    var maritalStatusNumeric = req.query['maritalStatusNumeric'];
+    var genderNumeric = req.query['genderNumeric'];
+    var income = req.query['income'];
+    var commuteDistanceNumeric = req.query['commuteDistanceNumeric'];
+    var cars = req.query['cars'];
+    var age = req.query['age'];
     var purchaseBikeNumeric = 0;
+    
+    /*maritalStatusNumeric=1&genderNumeric=1&income=50000&commuteDistanceNumeric=5&cars=2&age=20&purchaseBikeNumeric=0 */
+    
     options["headers"]["Authorization"] = "Bearer " + apiKey;
     options["body"]["Inputs"]["input1"]["Values"] = [
         [
@@ -34,7 +37,7 @@ router.get('/predict', function(req, res, next) {
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         console.log(JSON.stringify(body));
-    });
+    }).pipe(res);
 });
 
 module.exports = router;

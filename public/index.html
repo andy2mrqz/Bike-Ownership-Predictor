@@ -1,42 +1,77 @@
 <html>
     <head>
         <link rel="stylesheet" href="stylesheets/style.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div class="layer">
         <div class="container">  
           <form id="contact" action="" method="post">
             <h3>Bike Owner Prediction</h3>
             <h4>We'd like to predict whether or not you own a bike!</h4>
             <fieldset class="styled-select slate">
-              <select tabindex="1" required autofocus>
-                  <option value="1">Single</option>
-                  <option value="2">Married</option>
+              <label for="marital">Marital Status</label>
+              <select tabindex="1" required autofocus id="marital">
+                  <option value="0">Single</option>
+                  <option value="1">Married</option>
                 </select>
             </fieldset>
             <fieldset class="styled-select slate">
-                <select tabindex="2" required autofocus>
+              <label for="gender">Gender</label>
+                <select tabindex="2" required autofocus id="gender">
                   <option value="1">Female</option>
-                  <option value="2">Male</option>
+                  <option value="0">Male</option>
+                </select>
+            </fieldset>
+            <fieldset class="styled-select slate">
+              <label for="commute">Commute Distance (to school or work)</label>
+                <select tabindex="3" required autofocus id="commute">
+                  <option value="1">0-1 Miles</option>
+                  <option value="2">1-2 Miles</option>
+                  <option value="3">2-5 Miles</option>
+                  <option value="4">5-10 Miles</option>
+                  <option value="5">10+ Miles</option>
                 </select>
             </fieldset>
             <fieldset>
-              <input placeholder="Annual Income" type="text" tabindex="3" required>
+              <label for="income">Annual Income</label>
+              <input type="text" tabindex="4" id="income" required>
             </fieldset>
             <fieldset>
-              <input placeholder="Commute Distance (to school or work in miles)" type="text" tabindex="4" required>
+              <label for="cars">Number of Cars</label>
+              <input type="text" tabindex="5" id="cars" required>
             </fieldset>
             <fieldset>
-              <input placeholder="Number of Cars" type="text" tabindex="5" required></textarea>
-            </fieldset>
-            <fieldset>
-              <input placeholder="Age" type="text" tabindex="6" required></textarea>
+              <label for="age">Age</label>
+              <input type="text" tabindex="6" id="age" required>
             </fieldset>
             <fieldset>
               <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
             </fieldset>
+            <p id="predictionResult"></p>
           </form>
         </div>
-        </div>
+          <script>
+            $("#contact-submit").click(function(event) {
+              event.preventDefault();
+              var url = "/predict?maritalStatusNumeric=" + $("#marital").val() + "&genderNumeric=" + $("#gender").val() + "&income=" + $("#income").val() + "&commuteDistanceNumeric=" + $("#commute").val();
+              var url = url + "&cars=" + $("#cars").val() + "&age=" + $("#age").val()
+              $.getJSON(url, function(data) {
+                var likelihood = (data['Results']['output1']['value']['Values'][0][0]*100).toFixed(2);
+                console.log(likelihood);
+                var decision;
+                if (likelihood >= 50) {
+                  decision = "We predict that you <b>ARE</b> a bike owner!<p>Predicted likelihood that you own a bike: ";
+                  decision += likelihood + "%";
+                }
+                else {
+                  decision = "We predict that you are <b>NOT</b> a bike owner!<p>Predicted likelihood that you own a bike: ";
+                  decision += likelihood + "%";
+                }
+                $("#predictionResult").html(decision);
+              });
+            });
+          </script>
     </body>
 </html>
